@@ -29,13 +29,21 @@
     }
     if (posts.length == 0) throw 'no matching posts';
 
-    document.getElementById('title').innerText = posts[0].title;
-    if (posts[0].image == null) {
+    if (params.get('showTitle') == 'false') {
+      document.getElementById('title').style.display = 'none';
+    } else {
+      document.getElementById('title').innerText = posts[0].title;
+    }
+    if (params.get('showImage') == 'false' || posts[0].image == null) {
       document.getElementById('image').style.display = 'none';
     } else {
       document.getElementById('image').src = posts[0].image;
     }
-    document.getElementById('text').innerText = posts[0].text;
+    if (params.get('showText') == 'false') {
+      document.getElementById('text').style.display = 'none';
+    } else {
+      document.getElementById('text').innerText = posts[0].text;
+    }
   }
 
   reddit.fetchPosts(params.get('subreddit'), params.get('category'), params.get('period')).then(render);
