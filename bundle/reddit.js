@@ -18387,11 +18387,16 @@ utils.getEncodingFromContentType = function(contentType) {
 },{"./NodeType":80,"./Utility":81,"./WriterState":82,"./XMLDOMImplementation":89,"./XMLDocument":97,"./XMLDocumentCB":98,"./XMLStreamWriter":106,"./XMLStringWriter":107}],112:[function(require,module,exports){
 const RSSParser = require('rss-parser');
 
+
+window.reddit = {};
+
+
 async function fetchFeed(suburl = '') {
   let proxy = 'https://cors-anywhere.herokuapp.com/';
   let url = proxy + 'https://www.reddit.com' + suburl + '/.rss';
   return await parseRSS(url);
 }
+window.reddit.fetchFeed = fetchFeed;
 
 function getImage(post) {
   let parser = new DOMParser();
@@ -18401,6 +18406,7 @@ function getImage(post) {
   if (imageLinks.length == 0) return null;
   return imageLinks[0];
 }
+window.reddit.getImage = getImage;
 
 function parseRSS(url) {
   let parser = new RSSParser();
@@ -18411,7 +18417,5 @@ function parseRSS(url) {
     })
   });
 }
-
-module.exports = {fetchFeed: fetchFeed, getImage: getImage};
 
 },{"rss-parser":68}]},{},[112]);
