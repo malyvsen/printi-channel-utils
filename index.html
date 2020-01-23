@@ -3,9 +3,38 @@
   <head>
     <meta charset="utf-8">
     <title>Printi channel utilities</title>
+    <link rel="stylesheet" href="main.css">
   </head>
   <body>
     <h1>Printi channel utilities</h1>
-    <p>The useful stuff is over at <a href="bundle">bundle</a>.</p>
+    <p>Confused what this is for? Visit <a href="channels.printi.me">channels.printi.me</a>.</p>
+
+    <h2><a href="bundle/rss.js">rss.js</a></h2>
+    <code>async function fetchFeed(url)</code>
+    <div class="output-block">
+      <code id='rss.js' class='output-block'></code>
+    </div>
+
+    <h2><a href="bundle/reddit.js">reddit.js</a></h2>
+    <code>async function fetchPosts(subreddit = null, sort = null, period = null)</code>
+    <div class="output-block">
+      <code id='reddit.js' class='output-block'></code>
+    </div>
   </body>
 </html>
+
+
+
+<script src="bundle/rss.js"></script>
+<script>
+  rss.fetchFeed('https://reddit.com/.rss').then(
+    feed => document.getElementById('rss.js').innerText = JSON.stringify(feed, undefined, 4)
+  );
+</script>
+
+<script src="bundle/reddit.js"></script>
+<script>
+  reddit.fetchPosts().then(
+    posts => document.getElementById('reddit.js').innerText = JSON.stringify(posts, undefined, 4)
+  );
+</script>
