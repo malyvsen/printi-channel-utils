@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa&display=swap');
+
+html * {
+  font-family: 'Comfortaa', cursive;
+  text-align: center;
+}

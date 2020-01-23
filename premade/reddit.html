@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="reddit.css">
+  </head>
+  <body>
+    <h1 id="title"></h1>
+    <img id="image" style="max-width:95vw;">
+    <p id="text"></p>
+  </body>
+</html>
+
+
+
+<script src="../bundle/reddit.js"></script>
+<script>
+  let params = new URLSearchParams(window.location.search);
+
+  function render(posts) {
+    if (params.get('mustHaveContent') == 'true') {
+      posts = posts.filter(post => post.image != null || post.text != '');
+    }
+    if (params.get('mustHaveImage') == 'true') {
+      posts = posts.filter(post => post.image != null);
+    }
+    if (params.get('mustHaveText') == 'true') {
+      posts = posts.filter(post => post.text != '');
+    }
+    if (posts.length == 0) throw 'no matching posts';
+
+    document.getElementById('title').innerText = posts[0].title;
+    if (posts[0].image == null) {
+      document.getElementById('image').style.display = 'none';
+    } else {
+      document.getElementById('image').src = posts[0].image;
+    }
+    document.getElementById('text').innerText = posts[0].text;
+  }
+
+  reddit.fetchPosts(params.get('subreddit'), params.get('category'), params.get('period')).then(render);
+</script>
