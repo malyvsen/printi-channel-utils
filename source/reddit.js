@@ -1,32 +1,35 @@
-const RSSParser = require('rss-parser');
+const rss = require('./rss');
 
 
-window.reddit = {};
 
+async function fetchPosts(subreddit = null, sort = null, period = null) {
+  let url = 'https://reddit.com';
+  if (subreddit != null) url += '/r/' + subreddit;
+  if (sort != null) url += '/' + sort;
+  url += '/.rss';
+  if (period != null) url += '?t=' + period;
 
-async function fetchFeed(suburl = '') {
-  let proxy = 'https://cors-anywhere.herokuapp.com/';
-  let url = proxy + 'https://www.reddit.com' + suburl + '/.rss';
-  return await parseRSS(url);
+  let feed = await rss.fetchFeed(url);
+  return feed.items.map(item => new Post(item));
 }
-window.reddit.fetchFeed = fetchFeed;
 
-function getImage(post) {
-  let parser = new DOMParser();
-  let content = parser.parseFromString(post.content, 'text/html');
-  let links = Array.from(content.links).map(a => a.href);
-  let imageLinks = links.filter(link => link.startsWith('https://i.redd.it'));
-  if (imageLinks.length == 0) return null;
-  return imageLinks[0];
-}
-window.reddit.getImage = getImage;
+class Post {
+  constructor(item) {
+    this.title = item.title;
+    this.link = item.link;
+    this.author = item.author;
+    this.date = item.pubDate;
 
-function parseRSS(url) {
-  let parser = new RSSParser();
-  return new Promise((resolve, reject) => {
-    parser.parseURL(url, (err, feed) => {
-      if (err) return reject(err);
-      resolve(feed);
-    })
-  });
+    let parser = new DOMParser();
+    let content = parser.parseFromString(item.content, 'text/html');
+    let links = Array.from(content.links).map(a => a.href);
+    this.images = links.filter(link => link.startsWith('https://i.redd.it'));
+    let paragraphs = Array.from(content.getElementsByTagName('p'));
+    this.text = paragraphs.map(p => p.innerText).join('\n');
+  }
 }
+
+
+
+module.exports = {fetchPosts: fetchPosts};
+window.reddit = module.exports;
