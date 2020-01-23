@@ -17,13 +17,14 @@ class Post {
   constructor(item) {
     this.title = item.title;
     this.link = item.link;
-    this.author = item.author;
-    this.date = item.pubDate;
+    this.author = item.author.replace('/u/', '');
+    this.date = Date.parse(item.pubDate);
 
     let parser = new DOMParser();
     let content = parser.parseFromString(item.content, 'text/html');
     let links = Array.from(content.links).map(a => a.href);
-    this.images = links.filter(link => link.startsWith('https://i.redd.it'));
+    let images = links.filter(link => link.startsWith('https://i.redd.it'));
+    this.image = images.length > 0 ? images[0] : null;
     let paragraphs = Array.from(content.getElementsByTagName('p'));
     this.text = paragraphs.map(p => p.innerText).join('\n');
   }
