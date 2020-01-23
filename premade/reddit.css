@@ -4,3 +4,13 @@ html * {
   font-family: 'Comfortaa', cursive;
   text-align: center;
 }
+
+body {
+  margin: 0;
+}
+
+iframe {
+  border: 0;
+  width: 100vw;
+  height: 100vh;
+}
